@@ -86,6 +86,26 @@ $conv = $orbit->conversations->create(
     $actingUserId
 );
 
+//context conversations
+$orbit->conversations->create([
+    'type' => 'direct',
+    'participant_id' => $customerId,
+    'context' => [
+        'type' => 'booking',
+        'referenceId' => 'booking_888',
+        'title' => 'Hair Appointment',
+        'status' => 'confirmed',
+        'actor' => ['id' => $providerId, 'type' => 'provider', 'name' => 'Glow Salon'],
+    ],
+], $providerId);
+
+// Update context
+$orbit->conversations->updateContext($convId, ['status' => 'completed'], $providerId);
+
+// Find by reference
+$convs = $orbit->conversations->findByReference('booking_888', $customerId);
+
+
 // Send a message
 $msg = $orbit->messages->send([
     'conversation_id' => $conv['id'],
